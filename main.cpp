@@ -3,6 +3,8 @@
 #include <vector>
 #include <math.h>
 #include <ctime>
+#include <time.h>
+#include <stdlib.h>
 
 using namespace std;
 vector<vector<float> >uPrev;
@@ -22,13 +24,13 @@ void generateMembershipDegree(const vector<float>* inVec, int C){
 
     centers.resize(C);
 
-    for (auto i=0;i<inVec->size();i++){
+    for (int i=0;i<inVec->size();i++){
         U[i].resize(C);
         uPrev[i].resize(C);
     }
 
     //генерация
-    for (auto i=0;i<inVec->size();i++){
+    for (int i=0;i<inVec->size();i++){
         float sum = 0;
         for (int j=0;j<C;j++){
             sum+=U[i][j]=uPrev[i][j]=rand()%100;
@@ -54,8 +56,8 @@ void FCM (const vector<float>* inVec, int C, float m, float eps){
             float numerator = 0;
             float denumerator = 0;
             for (int i=0; i<inVec->size(); i++){        //для каждого вектора
-                numerator+=pow(U[i][j], m) * (*inVec)[i];
-                denumerator+=pow(U[i][j], m);
+                numerator+=powf(U[i][j], m) * (*inVec)[i];
+                denumerator+=powf(U[i][j], m);
             }
             centers[j] = numerator / denumerator;
         }
@@ -65,7 +67,7 @@ void FCM (const vector<float>* inVec, int C, float m, float eps){
             for (int j=0; j<C; j++){   //для каждого кластера
                 float sum = 0;
                 for (int k=0; k<C; k++)
-                    sum+= pow(((*inVec)[i] - centers[j])/((*inVec)[i] - centers[k]), 2/(m-1));
+                    sum+= powf(((*inVec)[i] - centers[j])/((*inVec)[i] - centers[k]), 2/(m-1));
                 U[i][j] = 1/sum;
             }
 
@@ -106,7 +108,7 @@ int main(int argc, char *argv[])
         inVec.push_back(i);
     }
 
-    int C = 10;
+    int C = 5;
     clock_t start_time =  clock();
     FCM (&inVec, C, 2, 0.00001);
 
